@@ -1,9 +1,18 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const  { chats }  = require("./data/data")
+const cors = require('cors');
+
+const corsOption = {
+    credentials: true,
+    origin: ["http://localhost:3000"]
+}
 
 const app = express()
 dotenv.config()
+
+app.use(cors(corsOption));
+
 
 app.get("/", (req, res) => {
     res.send("API is Running")
