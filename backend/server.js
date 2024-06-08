@@ -5,17 +5,22 @@ const colors = require("colors")
 
 const connectBD = require("./config/db")
 const  { chats }  = require("./data/data")
+const userRoutes = require("./routes/userRoutes")
+
+const {notFound, errorHandler} = require("./middleware/errorMiddeware")
 
 const corsOption = {
     credentials: true,
     origin: ["http://localhost:3000"]
 }
 
-
 const app = express()
 dotenv.config()
 
 connectBD()
+
+
+app.use(express.json()) // to accept json data
 
 app.use(cors(corsOption));
 
@@ -32,6 +37,12 @@ app.get("/api/chat/:id", (req, res) => {
     const singleChat = chats.find(c => c._id === req.params.id)
     res.send(singleChat)
 })
+
+app.use('/api/user', userRoutes)
+
+
+app.use(notFound)
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
 
