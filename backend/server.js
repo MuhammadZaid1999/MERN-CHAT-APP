@@ -30,14 +30,14 @@ app.get("/", (req, res) => {
     res.send("API is Running")
 })
 
-app.get("/api/chat", (req, res) => {
-    res.send(chats)
-})
+// app.get("/api/chat", (req, res) => {
+//     res.send(chats)
+// })
 
-app.get("/api/chat/:id", (req, res) => {
-    const singleChat = chats.find(c => c._id === req.params.id)
-    res.send(singleChat)
-})
+// app.get("/api/chat/:id", (req, res) => {
+//     const singleChat = chats.find(c => c._id === req.params.id)
+//     res.send(singleChat)
+// })
 
 app.use('/api/user', userRoutes)
 app.use('/api/chat', chatRoutes)
