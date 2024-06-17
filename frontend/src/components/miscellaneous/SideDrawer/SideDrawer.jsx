@@ -3,6 +3,7 @@ import { Box, Button, Tooltip, Text, MenuButton, Menu, Avatar, Flex, Spacer, Men
 import { useState } from "react"
 import { ChatState } from "../../../Context/ChatProvider"
 import ProfieModal from "../ProfieModal/ProfileModal"
+import { useNavigate } from "react-router-dom"
 
 const SideDrawer = () => {
     const [search, setSearch] = useState("")
@@ -11,6 +12,12 @@ const SideDrawer = () => {
     const [loadingChat, setLoadingChat] = useState()
 
     const {user} = ChatState()
+    const navigate = useNavigate()
+
+    const LogoutHandler = () => {
+        localStorage.removeItem("userInfo")
+        navigate("/")
+    }
 
 
     return(
@@ -66,7 +73,7 @@ const SideDrawer = () => {
                         <ProfieModal user={user}>
                             <MenuItem>MyProfile</MenuItem>
                         </ProfieModal>
-                        <MenuItem>Logout</MenuItem>
+                        <MenuItem onClick={LogoutHandler}>Logout</MenuItem>
                     </MenuList>
                 </Menu>
             </div>

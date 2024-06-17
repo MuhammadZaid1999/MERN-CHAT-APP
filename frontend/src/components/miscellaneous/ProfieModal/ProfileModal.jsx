@@ -1,5 +1,5 @@
 import { ViewIcon } from "@chakra-ui/icons"
-import { Button, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { Button, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Image, Text} from "@chakra-ui/react"
 
 const ProfieModal = ({user, children}) => {
 
@@ -17,19 +17,45 @@ const ProfieModal = ({user, children}) => {
                 />
             } 
 
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>{user.name}</ModalHeader>
+                <ModalContent h="410px">
+                    <ModalHeader
+                        fontSize="40px"
+                        fontFamily="Work sans"
+                        d="flex"
+                        justifyContent="center"
+                        textAlign="center"
+                    >
+                        {user.name}
+                    </ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody>
-                        sdsadas
+                    <ModalBody
+                        d="flex"
+                        flexDir="column"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        textAlign="center"
+                        alignContent="center"
+                    >
+                        <Image
+                            boxSize="150px"
+                            borderRadius="full"
+                            display="inline"
+                            src={user.pic}
+                            alt={user.name}
+                        />
+                        <Text
+                            fontSize={{ base: "28px", md: "30px"}}
+                            fontFamily="Work sans"
+                        >
+                            Email: {user.email}
+                        </Text>
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onClose}>
-                        Close
+                            Close
                         </Button>
-                        <Button variant='ghost'>Secondary Action</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
