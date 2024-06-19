@@ -11,7 +11,7 @@ const ProfieModal = ({user, children}) => {
                 <span onClick={onOpen}>{children}</span>
                 :
                 <IconButton
-                 d={{ base: "flex"}}
+                 display={{ base: "flex"}}
                  icon={<ViewIcon/>}
                  onClick={onOpen}
                 />
@@ -23,19 +23,17 @@ const ProfieModal = ({user, children}) => {
                     <ModalHeader
                         fontSize="40px"
                         fontFamily="Work sans"
-                        d="flex"
+                        display="flex"
                         justifyContent="center"
-                        textAlign="center"
                     >
                         {user.name}
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody
-                        d="flex"
+                        display="flex"
                         flexDir="column"
                         alignItems="center"
                         justifyContent="space-between"
-                        textAlign="center"
                         alignContent="center"
                     >
                         <Image
