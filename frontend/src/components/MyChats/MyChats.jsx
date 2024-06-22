@@ -4,10 +4,11 @@ import { Box, Button, Stack, Text, useToast } from "@chakra-ui/react"
 import axios from "axios"
 import { AddIcon } from "@chakra-ui/icons"
 import ChatLoading from "../ChatLoading/ChatLoading"
+import { getSender } from "../../config/ChatLogics/ChatLogics"
 
 const MyChats = () => {
     const [loggedUser, setLoggedUser] = useState()
-    const {selectedChat, setSelectedChat, user, chats, setChats} = ChatState()
+    const {user, selectedChat, setSelectedChat, chats, setChats} = ChatState()
     const toast = useToast()
 
     const fetchChats = async () => {
@@ -83,10 +84,11 @@ const MyChats = () => {
             >
                 {
                     chats ? 
-                        <Stack overflow="hidden">
+                        <Stack overflowY="scroll">
                             {
                                 chats.map(chat => (
                                     <Box
+                                        key={chat._id}
                                         onClick={() => setSelectedChat(chat)}
                                         cursor="pointer"
                                         bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
@@ -94,10 +96,13 @@ const MyChats = () => {
                                         px={3}
                                         py={2}
                                         borderRadius="lg"
-                                        key={chat._id}
                                     >
                                         <Text>
-                                            {chat.chatName}
+                                            {
+                                                !chat.isGroupChat ? getSender(loggedUser, chat.users
+
+                                                ) : chat.chatName
+                                            }
                                         </Text>
                                     </Box>
                                 ))
