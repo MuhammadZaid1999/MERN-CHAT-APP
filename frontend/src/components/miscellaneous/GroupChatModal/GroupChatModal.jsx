@@ -1,15 +1,15 @@
-import { Button, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react"
+import { Box, Button, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react"
 import { useState } from "react"
 import { ChatState } from "../../../Context/ChatProvider"
 import axios from "axios"
-import UserListItem from "../../UserAvatar/UserListItem"
+import UserListItem from "../../UserAvatar/UserListItem/UserListItem"
+import UserBagdeItem from "../../UserAvatar/UserBadgeItem/UserBadgeItem"
 
 const GroupChatModal = ({children}) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const[groupChatName, setGroupChatName] = useState()
     const[selectedUsers, setSelectedUsers] = useState([])
-    const[search, setSearch] = useState("")
     const[searchResult, setSearchResult] = useState([])
     const[loading, setLoading] = useState(false)
 
@@ -62,11 +62,65 @@ const GroupChatModal = ({children}) => {
             return
         }
 
-        setSelectedUsers([userToAdd, ...selectedUsers])
+        setSelectedUsers([...selectedUsers, userToAdd])
     }
 
 
-    const handleSubmit = () => {}
+    const handleDelete = (user) => {
+        const deleteUser = selectedUsers.filter(_user => _user !== user)
+        setSelectedUsers(deleteUser)
+    }
+
+    const handleSubmit = async () => {
+        if(!groupChatName || !selectedUsers){
+            toast({
+                title: "Please fill all the Fields!",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+                position: "top",
+            })
+            return
+        }
+
+        try {
+            
+            const config = {
+                headers: {
+                  Authorization: `Bearer ${user.token}`,
+                },
+            };
+
+            const {data} = await axios.post(`http://localhost:5000/api/chat/group`,
+                {
+                   name: groupChatName,
+                   users: JSON.stringify(selectedUsers.map(u => u._id))
+                },
+                config
+            )
+
+            setChats([data, ...chats])
+            onClose()
+
+            toast({
+                title: "New Group Chat Created!",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: "top",
+            })
+        
+        } catch (error) {
+            toast({
+                title: "Failed to Create Group Chat!",
+                description: error.response.data,
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "top",
+            })
+        }
+    }
     
     return (
         <>
@@ -107,6 +161,18 @@ const GroupChatModal = ({children}) => {
                 </FormControl>
 
                 {/* Selected Users */}
+                <Box w="100%" display="flex" flexWrap="flex">
+                    {
+                        selectedUsers.map(user => (
+                            <UserBagdeItem
+                                key={user._id}
+                                user={user}
+                                handleFunction={() => handleDelete(user)}
+                            />
+                        ))
+                    }
+                </Box>
+
                 {
                     loading ?
                         <div>Loading</div>
