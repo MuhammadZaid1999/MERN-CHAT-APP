@@ -10,7 +10,7 @@ const UpdatedGroupModal = ({fetchAgain, setFetchAgain}) => {
 
     const {isOpen, onOpen, onClose} = useDisclosure()
 
-    const {user, selectedChat, setSelectedChat} = ChatState()
+    const {user, selectedChat, setSelectedChat, fetchMessages} = ChatState()
 
     const[groupChatName, setGroupChatName] = useState()
     const[searchResult, setSearchResult] = useState([])
@@ -37,6 +37,7 @@ const UpdatedGroupModal = ({fetchAgain, setFetchAgain}) => {
             )
             setSearchResult(data)
             setFetchAgain(!fetchAgain)
+            fetchMessages()
 
         } catch (error) {
             toast({
