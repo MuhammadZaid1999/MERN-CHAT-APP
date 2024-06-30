@@ -7,6 +7,7 @@ import UpdatedGroupModal from "../miscellaneous/UpdatedGroupModal/UpdatedGroupMo
 import { useEffect, useState } from "react"
 import axios from "axios"
 import "../styles/styles.css"
+import ScrollableChat from "../ScrollableChat/ScrollableChat"
 
 const SingleChat = ({fetchAgain, setFetchAgain}) => {
 
@@ -35,9 +36,9 @@ const SingleChat = ({fetchAgain, setFetchAgain}) => {
                 config
             )
 
-            console.log(messages)
             setMessages(data)
             setLoading(false)
+            console.log(messages)
             
         } catch (error) {
             toast({
@@ -148,7 +149,7 @@ const SingleChat = ({fetchAgain, setFetchAgain}) => {
                         >
                             {/* { Message Here} */}
                             {
-                                !loading ? 
+                                loading ? 
                                     <Spinner
                                         size="lg"
                                         w={20}
@@ -159,6 +160,9 @@ const SingleChat = ({fetchAgain, setFetchAgain}) => {
                                 :
                                 <div className="messages">
                                     {/* Message */}
+                                    <ScrollableChat
+                                        messages={messages} 
+                                    />
                                 </div>    
                             }
                             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
