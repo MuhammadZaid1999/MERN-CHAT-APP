@@ -13,6 +13,9 @@ import ScrollableChat from "../ScrollableChat/ScrollableChat";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "../miscellaneous/UpdatedGroupModal/UpdatedGroupModal";
 import { ChatState } from "../../Context/ChatProvider";
+import Lottie from "react-lottie";
+import animationData from "../../animations/typing/typing.json";
+
 const ENDPOINT = "http://localhost:5000"; // 
 var socket, selectedChatCompare;
 
@@ -25,6 +28,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [istyping, setIsTyping] = useState(false);
   const toast = useToast();
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   const { selectedChat, setSelectedChat, user } = ChatState();
 
@@ -98,8 +109,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
-    // socket.on("typing", () => setIsTyping(true));
-    // socket.on("stop typing", () => setIsTyping(false));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
 
     // eslint-disable-next-line
   }, []);
@@ -126,6 +137,26 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
+
+    // Typing Indicator Logic
+    
+    if(!socketConnected)
+      return
+
+    if(!typing){
+      setTyping(true)
+      socket.emit("typing", selectedChat._id)
+    }
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (
@@ -197,7 +228,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               isRequired
               mt={3}
             >
-
+              { istyping ? 
+                <div>
+                  <Lottie
+                    options={defaultOptions}
+                    width={70}
+                    style={{ marginBottom: 15, marginLeft: 0 }}
+                  />
+                </div> 
+                : 
+                <></>
+              }
               <Input
                 variant="filled"
                 bg="#E0E0E0"
